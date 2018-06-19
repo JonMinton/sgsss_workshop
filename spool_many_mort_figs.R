@@ -63,8 +63,55 @@ dta_nested %>%
   mutate(figs = pmap(list(PLACE_NAME = country_name, SEX = sex, DATA = data), create_figures)) -> dta_nested
 
 
-pdf("test.pdf", paper = "a4r", height = 18, width = 25)
+pdf("figures/mortality_gridded.pdf", paper = "a4r", height = 18, width = 25)
 lapply(X = dta_nested[["figs"]], FUN = print)
 dev.off()
 
+
+
+create_figures_ungridded <- function(PLACE_NAME, SEX, DATA){
+  
+  LIMITS <- c(0.05, 300)
+  
+  TITLE <- paste0("Mortality, ", SEX, ", ", PLACE_NAME)
+  DATA %>% 
+    filter(age <= 90) %>% 
+    mutate(death_rate = case_when(
+      death_rate < LIMITS[1] ~ LIMITS[1],
+      death_rate > LIMITS[2] ~ LIMITS[2],
+      TRUE ~ death_rate
+    )) -> DATA 
+  
+  
+  DATA %>% 
+    ggplot(aes(x = year, y = age, fill = death_rate)) + 
+    geom_tile() + 
+    coord_fixed() + 
+    xlim(c(1850, 2015)) + 
+    scale_fill_gradientn(
+      "Death rate\n/1000",
+      colours = scales::brewer_pal(palette = "Paired")(12), 
+      trans = "log", 
+      breaks = c(0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200),
+      limits = c(0.05, 300)
+    )  +
+    theme_minimal() + 
+    labs(
+      x = "Year", 
+      y = "Age in single years", 
+      title = TITLE,
+      caption = "Source: Human Mortality Database") -> fig
+  
+  
+  return(fig)
+}
+
+
+dta_nested %>% 
+  mutate(figs_ungridded = pmap(list(PLACE_NAME = country_name, SEX = sex, DATA = data), create_figures_ungridded)) -> dta_nested
+
+
+pdf("figures/mortality_ungridded.pdf", paper = "a4r", height = 18, width = 25)
+lapply(X = dta_nested[["figs"]], FUN = print)
+dev.off()
 
