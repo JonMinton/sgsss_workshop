@@ -112,6 +112,6 @@ dta_nested %>%
 
 
 pdf("figures/mortality_ungridded.pdf", paper = "a4r", height = 18, width = 25)
-lapply(X = dta_nested[["figs"]], FUN = print)
+lapply(X = dta_nested[["figs_ungridded"]], FUN = print)
 dev.off()
 
