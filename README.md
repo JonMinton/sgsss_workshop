@@ -35,8 +35,8 @@ The morning session will start with this presentation.
 
 After the presentation, participants will be presented with the following examples of Lexis surfaces:
 
-* (All cause mortality)[https://github.com/JonMinton/sgsss_workshop/tree/master/figures] for all available HMD countries. 
-* A one page brief on comparative mortality, comparing Scotland with average mortality risks for different European regions.
+* [All cause mortality](https://github.com/JonMinton/sgsss_workshop/tree/master/figures) for all available HMD countries. 
+* A [one page brief](https://github.com/JonMinton/sgsss_workshop/blob/master/support/mortality/Jon%20Minton%20-%20Scotland%20as%20Sick%20Man%20Brief.docx) on comparative mortality, comparing Scotland with average mortality risks for different European regions.
 * An A3 presentation giving cause-specific mortality for different gender/ethnic groups in the USA since 1999, produced using [Center for Disease Control](https://wonder.cdc.gov/) data.
 * Some examples of [3D printed mortality data](https://github.com/JonMinton/Statistical_Sculpture/tree/master/stl/individual/lmorts) also produced using the HMD. 
 
