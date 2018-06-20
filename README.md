@@ -31,7 +31,7 @@ Both sessions will be highly interactive and involve many group-based activities
 
 The morning session will focus on mortality data, and within this mainly on all-cause mortality data from the [Human Mortality Database](http://www.mortality.org/) (HMD).
 
-The morning session will start with this presentation. 
+The morning session will start with [this presentation](https://github.com/JonMinton/sgsss_workshop/blob/master/presentation_am.html). 
 
 After the presentation, participants will be presented with the following examples of Lexis surfaces:
 
