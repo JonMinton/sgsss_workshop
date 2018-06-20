@@ -40,4 +40,20 @@ After the presentation, participants will be presented with the following exampl
 * An A3 presentation giving cause-specific mortality for different gender/ethnic groups in the USA since 1999, produced using [Center for Disease Control](https://wonder.cdc.gov/) data.
 * Some examples of [3D printed mortality data](https://github.com/JonMinton/Statistical_Sculpture/tree/master/stl/individual/lmorts) also produced using the HMD. 
 
+The aim of the morning session will be, using these materials, to work in groups to develop a series of short presentations to be given before lunch. 
+
+# Afternoon Session: Fertility
+
+The afternoon session will focus on a particular methodological refinement of the standard Lexis surface, as applied to fertility rather than mortality data. The session will start with a presentation I delivered previously which describes the approach, and makes some suggestions about possible implications of the findings. After this, two additional materials will be presented: 
+
+* [A paper](https://osf.io/fruhz/) describing the approach and literature/academic debates which the research links to, co-authored with Serena Pattaro and Laura Vanderbloemen.
+* The [full visualisation](https://github.com/JonMinton/comparative_fertility/blob/master/figures/ccfr/hfd_hfc_combined_latticeplot.png), comprising fertility trajectories by cohort for 45 countries. 
+
+Additional figures, for each individual country, are available here and, with different aethetics, here.
+
+As with the morning session, the aim of the afternoon session will be to work in groups, using the materials to produce a series of short presentations to be given at the end of the day. 
+
+
+
+
 
