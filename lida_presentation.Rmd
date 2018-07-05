@@ -1,8 +1,8 @@
 ---
-title: "Getting 'on the case' with population data"
+title: "Thinking about population data as structures, not slices"
 author: "Jon Minton"
-date: "26 June 2018"
-subtitle: "Using Lexis surfaces to see more data, better"
+date: "7 July 2018"
+subtitle: "Examples of despair-related deaths in deprived areas of Scotland"
 output: ioslides_presentation
 ---
 
@@ -26,11 +26,6 @@ knitr::opts_chunk$set(echo = FALSE)
 - **Lexis surface**:  a way of looking at population data which encourages a 'case-based' way of thinking about what the data show, in which the independent/partitionable effect assumption is not 'baked in'
 - Starting with the Lexis surface allows better informal models to be developed before the statistical modelling stage
 
-## Fez: A metaphor for variable-based quantitative research
-
-<iframe width="400" height="300" src="https://upload.wikimedia.org/wikipedia/commons/transcoded/4/47/FEZ_trial_gameplay_HD.webm/FEZ_trial_gameplay_HD.webm.360p.webm" frameborder="0" allowfullscreen></iframe>
-
-
 ## Some additional ideas
 
 - Quantitative research isn't about numbers, it's about patterns
@@ -38,6 +33,16 @@ knitr::opts_chunk$set(echo = FALSE)
 - People are good at images but bad at numbers
 - People are good at complex **gestalts**; bad at linear sequence
 - The Lexis Surface (**maps of age-time**) allows data to be explored much as maps of space can be explored
+
+## Structure of talk
+
+- Gestalt examples
+- Defining a data visualisation
+- Example 1: All-cause mortality data 
+- Example 2: Despair-related deaths in Scotland
+- Concluding remarks
+
+# Introduction 
 
 ## Examples of Gestalts
 
@@ -48,11 +53,6 @@ knitr::include_graphics("presentation images/gestalt.PNG")
 
 Source: https://www.slideshare.net/jnicotra/gestalt-theory-for-visual-design 
 
-## Case-based reasoning as Gestalts 
-
-![](presentation images/xray-of-hand-and-foot1.jpg)
-
-- Source: http://crossislandmedicalcenter.com/x-rays/
 
 ## Case-based reasoning as Gestalts 
 
@@ -65,31 +65,9 @@ knitr::include_graphics("presentation images/EMGN822.jpg")
 - Source: http://www.cardiffhipandknee.com/hip/hip-revisions
 - Source: http://emgn.com/entertainment/22-shockingly-graphic-x-rays-where-the-patient-somehow-survived/
 
-## Maps as Gestalts 
-
-```{r out.height="400px", echo = F}
-knitr::include_graphics("presentation images/satellite-view-of-earth-at-night-750.jpg")
 
 
-```
-
-
-- Source: https://geology.com/articles/satellite-photo-earth-at-night.shtml
-
-
-## Map of place; map of age-time
-
-```{r out.height="400px", echo = F}
-knitr::include_graphics("presentation images/figures-1ab.png")
-
-
-```
-
-
-- Source: https://ije-blog.com/2016/06/27/lexis-cubes-1-from-maps-of-space-to-maps-of-time/comment-page-1/
-
-
-## Maps and Mapping 
+## Grammar of Graphics 101
 
 Data visualisations
 
@@ -137,7 +115,7 @@ This set of mapping rules...
 | % of population with health needs | Position along horizontal axis | 
 | Size of population in areal unit | Size of circle | 
 | Whether in North or south of England | Colour of bubble | 
-
+<br>
 Applied to 2001 English/Welsh Census data...
 
 
@@ -161,6 +139,8 @@ Population data are data where:
 - Has been recorded consistently about <span style = "color:green">**types of people**</span>
 - For different <span style = "color:red">**ages**</span> 
 - and at different <span style = "color:blue">**times**</span> 
+
+# Example 1: All-cause mortality 
 
 ## Example of data in this format 
 
@@ -196,26 +176,6 @@ dta
 - Conditional sweeping by <span style = "color:blue">year</span>: different <span style = "color:red">age groups</span> 
 - etc 
 
-## Life expectancies 
-
-```{r show_scot_e0, echo = FALSE, warning = FALSE, comment = FALSE}
-dta %>% 
-  filter(sex == "total") %>% 
-  mutate(popdeath = population_count * age) %>% 
-  group_by(country, year) %>% 
-    summarise(e0 = sum(popdeath) / sum(population_count)) %>% 
-  ungroup() %>% 
-  ggplot(aes(x = year,  y = e0, group = country)) + 
-    geom_line() + 
-    geom_line(
-      aes(x = year, y = e0),
-      colour = "blue", size = 1.2,
-      inherit.aes = FALSE, 
-      data = . %>% filter(country == "GBR_SCO")
-    )
-
-
-```
 
 
 ## Infant mortality  
@@ -462,35 +422,6 @@ anova(mod_00, mod_01, mod_02, mod_03, mod_04, mod_05)
 
 ## Lexis surface for Scotland 
 
-```{r scot_lexis_overall, echo = FALSE, comment = FALSE, warning = FALSE}
-
-dta %>% 
-  filter(sex == "total") %>% 
-  filter(country == "GBR_SCO") %>% 
-  filter(age <= 90) %>% 
-  mutate(death_rate = 1000 * death_count / population_count) %>% 
-  ggplot(aes(x = year, y = age, fill = death_rate)) + 
-  geom_tile() + 
-  scale_fill_gradientn("Death rate\n/1000",colours = scales::brewer_pal(palette = "Paired")(12), trans = "log", breaks = c(0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200))  
-```
-
-## Lexis surface for Scotland 
-
-```{r scot_lexis_bygender, echo = FALSE, comment = FALSE, warning = FALSE}
-
-dta %>% 
-  filter(sex != "total") %>% 
-  filter(country == "GBR_SCO") %>% 
-  filter(age <= 90) %>% 
-  mutate(death_rate = 1000 * death_count / population_count) %>% 
-  ggplot(aes(x = year, y = age, fill = death_rate)) + 
-  geom_tile() + 
-  facet_wrap(~sex) +
-  scale_fill_gradientn("Death rate\n/1000",colours = scales::brewer_pal(palette = "Paired")(12), trans = "log", breaks = c(0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200))  
-```
-
-## Additional modifications
-
 
 ```{r scot_lexis_tidied, echo = FALSE, comment = FALSE, warning = FALSE}
 
@@ -522,36 +453,7 @@ dta %>%
   theme(axis.text.y.right = element_text(angle = 45, hjust = -1.5))
 ```
 
-## By gender 
-
-```{r scot_lexis_tidied_bygender, echo = FALSE, comment = FALSE, warning = FALSE}
-
-dta %>% 
-  filter(sex != "total") %>% 
-  filter(country == "GBR_SCO") %>% 
-  filter(age <= 90) %>% 
-  mutate(death_rate = 1000 * death_count / population_count) %>% 
-  ggplot(aes(x = year, y = age, fill = death_rate)) + 
-  geom_tile() + 
-  coord_fixed() + 
-  xlim(c(1850, 2015)) + 
-  scale_fill_gradientn(
-    "Death rate\n/1000",
-    colours = scales::brewer_pal(palette = "Paired")(12), 
-    trans = "log", 
-    breaks = c(0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200)
-    )  +
-  geom_abline(slope = 1, intercept = seq(-2010, -1750, by = 10), linetype = "dashed", alpha = 0.5) + 
-  theme_minimal() + 
-  facet_wrap(~sex) + 
-  geom_vline(xintercept = seq(1850, 2010, by = 10), linetype = "dashed", alpha = 0.5) + 
-  geom_hline(yintercept = seq(0, 90, by = 10), linetype = "dashed", alpha = 0.5) + 
-  labs(
-    x = "Year", 
-    y = "Age in single years", 
-    title = "Mortality, Overall, Scotland",
-    caption = "Source: Human Mortality Database") 
-```
+# Example 2: Cause specific mortality in Scotland
 
 ## NHS Health Scotland Example 
 
@@ -569,7 +471,10 @@ dta %>%
 ## A variable-based approach
 
 - [Intrinsic Estimator](http://yangclaireyang.web.unc.edu/files/2013/07/Yang_etal_AJS.pdf) (IE)
-- Partition into Age, Period and Cohort (APC) Effects
+- Partition into Age, Period and Cohort (APC) Effects. Slices data at:
+    - Age effects: 0 degrees
+    - Cohort effects: 45 degrees
+    - Period effects: 90 degrees
 - Identifiability problem: Impossible to do in theory (models 'underspecified')
 - Constraints applied 
 
@@ -625,10 +530,22 @@ knitr::include_graphics("presentation images/drd_ie_cohort_male.PNG")
 
 ## Lexis surfaces for males in most deprived areas
 
-```{r out.width = "80%", echo = F}
-knitr::include_graphics("presentation images/smoothed_for_wws_blog.png")
+```{r out.width = "60%", fig.align='center', echo = F}
+knitr::include_graphics("presentation images/additional_three_cause/data_surface_smoothed.png")
 
 ```
+
+## A typology of reasoning 
+
+| Mode    | Informal | Formal |
+| ------- | -------- | ------ |
+| Geometric | (1) Informal<br>Geometric | (2) Formal<br>Geometric | 
+| Aetiologic | (3) Informal<br>Aetiologic | (4) Formal<br>Aetiologic | 
+
+<br>
+
+* Focus here is on (1), (2), and (3). Not (4)
+
 
 ## What do the surfaces show, geometrically? 
 
@@ -643,9 +560,11 @@ knitr::include_graphics("presentation images/smoothed_for_wws_blog.png")
 - Suicide:
     - 'Noisier' version of drug-related
     
+
+    
 ## Developing and comparing models 
 
-```{r out.width = "80%", echo = F}
+```{r out.width = "96%", echo = F}
 knitr::include_graphics("presentation images/denovo_models.png")
 
 ```
@@ -657,13 +576,6 @@ knitr::include_graphics("presentation images/denovo_models.png")
 - The model based on the geometric 'reading' of the DRD/Suicide Lexis surfaces fit these data better than the Alcohol data 
 - Both models fit the data they are based on better than most naive, over-flexible  models (not shown) designed to curve to many shapes
 - Unlike some naive, over-flexible models, the parameters in the bespoke models have some meaningful interpretations
-
-## Example of Naive over-flexible models
-
-```{r out.width= "96%", echo = F}
-knitr::include_graphics("presentation images/alt_naive_models.PNG")
-
-```
 
 ## Table of 'truncated triangle' model parameters 
 
@@ -684,13 +596,29 @@ knitr::include_graphics("presentation images/lexis_workflow.png")
 
 ```
 
+# Summary/Conclusion
+
 ## Final thoughts
 
 - Before struggling to say something, you should have something to say
-- Your thoughts about population processes should not be limited by what you can easily express in a statistical model
-- Don't think in slices, think in structures
+- Your thoughts about population processes should not be limited by what you can easily express in a statistical model. (i.e. don't worry about formalisation too early)
+- Think in structures, not slices
+- For making decisions, informal aetiology, guided by informal geometry, may be sufficient
 
-And finally:
+## Example of decisions that could be informed by above observations
+
+- Observation: DRD/suicide patterns closely linked
+- Observation: Both disproportionately affect males in deprived areas 
+    - Approx 10-fold higher hazard than females in less deprived areas 
+- Observation: Both disproportionately affect cohorts born in 1960s ('Trainspotter Generation')
+- Decision: Link mental health services to drug support services?
+- Decision: Ensure services best located to serve those in greatest need
+- Decision: Explore further why male hazards ~ 3x higher than female hazards in same area
+    - Qual research in gender:area interactions and experience
+    - Explore how services can be adapted to more effectively engage males at high risk of suicide/DRD
+- Decision: Actively target high risk demographics?
+
+## And finally:
 
 - Thanks for listening! 
 
